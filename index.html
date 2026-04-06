@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aula 1 — Princípios da Estruturação Comercial</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080808;
+  --surface: #111111;
+  --card: #171717;
+  --border: #222222;
+  --accent: #C8F135;
+  --purple: #8B5CF6;
+  --orange: #F97316;
+  --red: #EF4444;
+  --text: #E8E8E8;
+  --muted: #666666;
+  --white: #FFFFFF;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── CURSOR ── */
+.cursor {
+  position: fixed; width: 12px; height: 12px;
+  background: var(--accent); border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+  mix-blend-mode: difference;
+}
+.cursor-ring {
+  position: fixed; width: 36px; height: 36px;
+  border: 1.5px solid var(--accent); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s ease, width 0.3s, height 0.3s, opacity 0.3s;
+  opacity: 0.5;
+}
+body:hover .cursor { opacity: 1; }
+
+/* ── BARRA DE PROGRESSO ── */
+#barra-progresso {
+  position: fixed; top: 0; left: 0; height: 3px;
+  background: var(--accent); z-index: 1000;
+  width: 0%; transition: width 0.1s linear;
+  box-shadow: 0 0 12px var(--accent);
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 900;
+  background: rgba(8,8,8,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; height: 64px;
+}
+.nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 14px;
+  color: var(--accent); letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.nav-links { display: flex; gap: 8px; }
+.nav-link {
+  font-size: 12px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--muted); padding: 6px 14px;
+  border-radius: 20px; cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s; text-decoration: none;
+  background: none;
+}
+.nav-link:hover, .nav-link.ativo {
+  color: var(--accent); border-color: var(--accent);
+  background: rgba(200,241,53,0.06);
+}
+.nav-semana {
+  font-size: 11px; color: var(--muted);
+  font-family: 'Syne', sans-serif;
+}
+
+/* ── SEÇÕES ── */
+section { min-height: 100vh; padding: 100px 40px 80px; max-width: 1200px; margin: 0 auto; }
+
+/* ── CAPA ── */
+#capa {
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative; min-height: 100vh; overflow: hidden;
+  max-width: 100%; padding: 0 80px;
+}
+.capa-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(200,241,53,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,241,53,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: gridDrift 20s linear infinite;
+}
+@keyframes gridDrift { 0%{transform:translateY(0)} 100%{transform:translateY(60px)} }
+
+.capa-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(200,241,53,0.1); border: 1px solid rgba(200,241,53,0.3);
+  color: var(--accent); font-size: 12px; font-weight: 600;
+  padding: 6px 16px; border-radius: 20px; width: fit-content;
+  margin-bottom: 32px; letter-spacing: 0.08em; text-transform: uppercase;
+  animation: fadeUp 0.8s ease both;
+}
+.badge-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
+
+.capa-titulo {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(52px, 8vw, 110px);
+  font-weight: 800; line-height: 0.92;
+  letter-spacing: -0.03em;
+  animation: fadeUp 0.8s 0.1s ease both;
+}
+.capa-titulo .linha1 { color: var(--white); display: block; }
+.capa-titulo .linha2 { color: var(--white); display: block; }
+.capa-titulo .linha3 {
+  color: var(--accent);
+  display: block;
+  -webkit-text-stroke: 2px var(--accent);
+}
+
+.capa-desc {
+  font-size: 18px; color: var(--muted); max-width: 500px;
+  margin: 28px 0 48px;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+
+.capa-stats {
+  display: flex; gap: 0;
+  animation: fadeUp 0.8s 0.3s ease both;
+}
+.stat-item {
+  padding: 20px 32px;
+  border: 1px solid var(--border);
+  cursor: default;
+  transition: all 0.3s;
+}
+.stat-item:first-child { border-radius: 12px 0 0 12px; }
+.stat-item:last-child  { border-radius: 0 12px 12px 0; }
+.stat-item:hover { background: var(--card); border-color: var(--accent); }
+.stat-valor {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px; font-weight: 800;
+  color: var(--accent); display: block;
+}
+.stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+.capa-scroll {
+  position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase;
+  animation: fadeUp 1s 0.6s ease both;
+}
+.scroll-linha {
+  width: 1px; height: 50px; background: linear-gradient(var(--accent), transparent);
+  animation: scrollDown 1.5s ease-in-out infinite;
+}
+@keyframes scrollDown { 0%{transform:scaleY(0);transform-origin:top} 50%{transform:scaleY(1);transform-origin:top} 100%{transform:scaleY(0);transform-origin:bottom} }
+
+.capa-numero {
+  position: absolute; right: 80px; bottom: 20%;
+  font-family: 'Syne', sans-serif; font-size: 300px; font-weight: 800;
+  color: rgba(200,241,53,0.03); line-height: 1; user-select: none;
+  pointer-events: none;
+}
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── AGENDA ── */
+#agenda { padding-top: 120px; }
+.secao-label {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--accent);
+  margin-bottom: 12px;
+}
+.secao-titulo {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 800; color: var(--white);
+  letter-spacing: -0.02em; margin-bottom: 48px;
+  line-height: 1.1;
+}
+.secao-titulo span { color: var(--accent); }
+
+.linha-divisoria {
+  height: 1px; background: var(--border);
+  margin-bottom: 48px;
+  position: relative; overflow: hidden;
+}
+.linha-divisoria::after {
+  content:''; position: absolute; left: 0; top: 0;
+  height: 1px; width: 0; background: var(--accent);
+  transition: width 1.2s ease;
+}
+.linha-divisoria.animada::after { width: 100%; }
+
+.agenda-lista { display: flex; flex-direction: column; gap: 0; }
+.agenda-item {
+  display: grid; grid-template-columns: 100px 1fr auto;
+  align-items: center; gap: 32px;
+  padding: 24px 32px;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  transition: all 0.3s; cursor: pointer;
+  position: relative; overflow: hidden;
+}
+.agenda-item:first-child { border-radius: 12px 12px 0 0; }
+.agenda-item:last-child  { border-radius: 0 0 12px 12px; border-bottom: 1px solid var(--border); }
+.agenda-item::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: transparent; transition: background 0.3s;
+}
+.agenda-item:hover { background: var(--card); }
+.agenda-item:hover::before { background: var(--accent); }
+.agenda-item.expandido { background: var(--card); }
+.agenda-item.expandido::before { background: var(--accent); }
+
+.agenda-tempo {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px; font-weight: 700;
+  color: var(--accent);
+}
+.agenda-conteudo-principal { }
+.agenda-titulo-item {
+  font-size: 17px; font-weight: 600; color: var(--white);
+}
+.agenda-subtitulo {
+  font-size: 13px; color: var(--muted); margin-top: 4px;
+}
+.agenda-detalhe {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s;
+  grid-column: 2 / 3; padding: 0 0 0 0;
+}
+.agenda-item.expandido .agenda-detalhe {
+  max-height: 300px; padding-top: 12px;
+}
+.agenda-detalhe p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+.agenda-icon {
+  font-size: 22px; transition: transform 0.3s;
+  color: var(--muted); user-select: none;
+}
+.agenda-item.expandido .agenda-icon {
+  transform: rotate(45deg); color: var(--accent);
+}
+.agenda-numero {
+  font-family: 'Syne', sans-serif;
+  font-size: 48px; font-weight: 800;
+  color: rgba(200,241,53,0.07); width: 60px;
+  text-align: right; flex-shrink: 0;
+}
+
+/* ── CANAIS ── */
+#canais { }
+.canais-intro {
+  font-size: 18px; color: var(--muted); max-width: 650px;
+  margin-bottom: 48px; line-height: 1.7;
+}
+
+.canais-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 2px; margin-bottom: 64px;
+}
+.canal-card {
+  background: var(--card);
+  padding: 36px 28px;
+  cursor: pointer; position: relative; overflow: hidden;
+  transition: all 0.3s;
+  border: 1px solid var(--border);
+}
+.canal-card:first-child { border-radius: 12px 0 0 12px; }
+.canal-card:last-child  { border-radius: 0 12px 12px 0; }
+.canal-card::after {
+  content: ''; position: absolute; inset: 0;
+  opacity: 0; transition: opacity 0.3s;
+}
+.canal-card.inbound::after   { background: radial-gradient(circle at 70% 30%, rgba(200,241,53,0.08), transparent 60%); }
+.canal-card.outbound::after  { background: radial-gradient(circle at 70% 30%, rgba(139,92,246,0.08), transparent 60%); }
+.canal-card.parceria::after  { background: radial-gradient(circle at 70% 30%, rgba(249,115,22,0.08), transparent 60%); }
+.canal-card:hover::after { opacity: 1; }
+.canal-card:hover { transform: translateY(-4px); }
+
+.canal-tag {
+  display: inline-block; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 4px; margin-bottom: 20px;
+}
+.inbound .canal-tag   { background: rgba(200,241,53,0.12); color: var(--accent); }
+.outbound .canal-tag  { background: rgba(139,92,246,0.12); color: var(--purple); }
+.parceria .canal-tag  { background: rgba(249,115,22,0.12); color: var(--orange); }
+
+.canal-nome {
+  font-family: 'Syne', sans-serif; font-size: 24px;
+  font-weight: 800; margin-bottom: 8px; color: var(--white);
+}
+.canal-slogan {
+  font-size: 13px; color: var(--muted); margin-bottom: 24px;
+}
+.canal-lista { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.canal-lista li {
+  font-size: 14px; color: var(--text);
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.canal-lista li::before { content: '—'; flex-shrink: 0; }
+.inbound .canal-lista li::before   { color: var(--accent); }
+.outbound .canal-lista li::before  { color: var(--purple); }
+.parceria .canal-lista li::before  { color: var(--orange); }
+
+.canal-indicador {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3px;
+}
+.inbound .canal-indicador   { background: var(--accent); }
+.outbound .canal-indicador  { background: var(--purple); }
+.parceria .canal-indicador  { background: var(--orange); }
+
+/* tabela comparativa */
+.tabela-titulo {
+  font-family: 'Syne', sans-serif; font-size: 22px;
+  font-weight: 700; color: var(--white); margin-bottom: 20px;
+}
+.tabela-comparativa {
+  width: 100%; border-collapse: collapse; font-size: 14px;
+}
+.tabela-comparativa th {
+  background: var(--surface);
+  color: var(--white); font-weight: 600;
+  padding: 14px 20px; text-align: left;
+  font-family: 'Syne', sans-serif; font-size: 13px;
+  letter-spacing: 0.04em;
+}
+.tabela-comparativa th:first-child { border-radius: 8px 0 0 0; color: var(--muted); }
+.tabela-comparativa th:last-child  { border-radius: 0 8px 0 0; }
+.tabela-comparativa td {
+  padding: 14px 20px; border-bottom: 1px solid var(--border);
+  color: var(--text); transition: background 0.2s;
+}
+.tabela-comparativa tr:last-child td { border-bottom: none; }
+.tabela-comparativa tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+.tabela-comparativa tr:last-child td:last-child  { border-radius: 0 0 8px 0; }
+.tabela-comparativa tbody tr { cursor: default; background: var(--card); }
+.tabela-comparativa tbody tr:hover { background: rgba(200,241,53,0.03); }
+.tabela-comparativa td:first-child { color: var(--muted); font-weight: 600; font-size: 13px; }
+.b2b-col { color: var(--accent) !important; }
+.b2c-col { color: var(--purple) !important; }
+.tabela-wrapper {
+  border-radius: 12px; overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+/* ── ICP ── */
+#icp { }
+.icp-intro {
+  font-size: 18px; color: var(--muted); max-width: 620px;
+  margin-bottom: 56px; line-height: 1.7;
+}
+
+.icp-tabs {
+  display: flex; gap: 2px; margin-bottom: 32px;
+  background: var(--surface); border-radius: 10px; padding: 4px;
+  width: fit-content; border: 1px solid var(--border);
+}
+.icp-tab {
+  padding: 10px 32px; border-radius: 8px; cursor: pointer;
+  font-size: 14px; font-weight: 600; transition: all 0.25s;
+  color: var(--muted); border: none; background: none;
+}
+.icp-tab.ativo {
+  color: var(--bg); font-weight: 700;
+}
+.icp-tab.b2b.ativo { background: var(--accent); color: var(--bg); }
+.icp-tab.b2c.ativo { background: var(--purple); color: var(--white); }
+
+.icp-painel {
+  display: none; animation: fadeIn 0.3s ease;
+}
+.icp-painel.ativo { display: block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+.icp-campos {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 16px; margin-bottom: 32px;
+}
+.icp-campo {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 20px 24px;
+  transition: all 0.3s; cursor: pointer;
+}
+.icp-campo:hover { border-color: var(--accent); background: rgba(200,241,53,0.03); }
+.icp-campo.b2c:hover { border-color: var(--purple); background: rgba(139,92,246,0.03); }
+.campo-label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--muted); margin-bottom: 8px;
+}
+.campo-exemplo {
+  font-size: 14px; color: var(--text); line-height: 1.5;
+}
+.campo-input {
+  width: 100%; background: transparent; border: none;
+  outline: none; color: var(--white); font-family: 'Instrument Sans', sans-serif;
+  font-size: 14px; margin-top: 8px;
+  border-top: 1px solid var(--border); padding-top: 8px;
+  resize: none;
+}
+.campo-input::placeholder { color: var(--muted); font-style: italic; }
+
+.icp-alerta {
+  background: rgba(249,115,22,0.08);
+  border: 1px solid rgba(249,115,22,0.3);
+  border-radius: 10px; padding: 20px 24px;
+  display: flex; gap: 16px; align-items: flex-start;
+}
+.alerta-icon { font-size: 22px; flex-shrink: 0; }
+.alerta-texto strong { color: var(--orange); display: block; margin-bottom: 4px; font-size: 15px; }
+.alerta-texto p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+/* ── TAREFA ── */
+#tarefa { }
+.tarefa-intro {
+  font-size: 18px; color: var(--muted); max-width: 600px;
+  margin-bottom: 48px; line-height: 1.7;
+}
+.tarefas-lista { display: flex; flex-direction: column; gap: 16px; margin-bottom: 48px; }
+.tarefa-item {
+  display: flex; gap: 24px; align-items: flex-start;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 28px 32px;
+  transition: all 0.3s; cursor: pointer;
+  position: relative; overflow: hidden;
+}
+.tarefa-item::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 0; transition: width 0.4s;
+  background: rgba(200,241,53,0.05);
+}
+.tarefa-item.concluida::before { width: 100%; }
+.tarefa-item.concluida { border-color: rgba(200,241,53,0.4); }
+
+.tarefa-num {
+  font-family: 'Syne', sans-serif; font-size: 40px;
+  font-weight: 800; line-height: 1; flex-shrink: 0;
+  transition: color 0.3s;
+}
+.t1 .tarefa-num { color: rgba(200,241,53,0.3); }
+.t2 .tarefa-num { color: rgba(139,92,246,0.3); }
+.t3 .tarefa-num { color: rgba(249,115,22,0.3); }
+.tarefa-item.concluida.t1 .tarefa-num { color: var(--accent); }
+.tarefa-item.concluida.t2 .tarefa-num { color: var(--purple); }
+.tarefa-item.concluida.t3 .tarefa-num { color: var(--orange); }
+
+.tarefa-corpo { flex: 1; }
+.tarefa-nome {
+  font-size: 18px; font-weight: 600; color: var(--white);
+  margin-bottom: 8px;
+}
+.tarefa-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+.tarefa-check {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid var(--border); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; transition: all 0.3s;
+  color: transparent;
+}
+.tarefa-item.concluida .tarefa-check {
+  background: var(--accent); border-color: var(--accent);
+  color: var(--bg); font-weight: 700;
+}
+
+.progresso-tarefas {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px 32px;
+  display: flex; align-items: center; gap: 24px;
+  margin-bottom: 40px;
+}
+.progresso-label {
+  font-size: 13px; color: var(--muted); min-width: 120px; font-weight: 500;
+}
+.progresso-barra {
+  flex: 1; height: 8px; background: var(--border);
+  border-radius: 4px; overflow: hidden;
+}
+.progresso-fill {
+  height: 100%; background: var(--accent); border-radius: 4px;
+  width: 0%; transition: width 0.5s ease;
+  box-shadow: 0 0 8px var(--accent);
+}
+.progresso-pct {
+  font-family: 'Syne', sans-serif; font-size: 20px;
+  font-weight: 800; color: var(--accent); min-width: 48px;
+  text-align: right;
+}
+
+/* ── PRÓXIMA AULA ── */
+.proxima-aula {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 36px 40px;
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 24px; position: relative; overflow: hidden;
+}
+.proxima-aula::before {
+  content: ''; position: absolute; right: -40px; top: -40px;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,92,246,0.12), transparent 70%);
+}
+.proxima-badge {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--purple); margin-bottom: 8px;
+}
+.proxima-titulo {
+  font-family: 'Syne', sans-serif; font-size: 24px;
+  font-weight: 800; color: var(--white); margin-bottom: 8px;
+}
+.proxima-desc { font-size: 14px; color: var(--muted); max-width: 500px; line-height: 1.6; }
+.proxima-semana {
+  font-family: 'Syne', sans-serif; font-size: 64px;
+  font-weight: 800; color: rgba(139,92,246,0.15);
+  flex-shrink: 0; user-select: none;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 80px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px; color: var(--muted);
+}
+.footer-logo {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  color: var(--accent); font-size: 13px;
+}
+
+/* ── SCROLL REVEAL ── */
+.revelar {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.revelar.visivel { opacity: 1; transform: translateY(0); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 32px; right: 32px;
+  background: var(--accent); color: var(--bg);
+  font-size: 14px; font-weight: 600;
+  padding: 14px 24px; border-radius: 10px;
+  z-index: 9999; box-shadow: 0 8px 32px rgba(200,241,53,0.3);
+  transform: translateY(80px); opacity: 0;
+  transition: all 0.3s ease;
+  max-width: 300px;
+}
+.toast.visivel { transform: translateY(0); opacity: 1; }
+
+/* ── BOTÃO DE ANOTAÇÕES ── */
+.btn-anotacoes {
+  position: fixed; bottom: 32px; left: 32px;
+  background: var(--card); border: 1px solid var(--border);
+  color: var(--text); font-size: 13px; font-weight: 600;
+  padding: 12px 20px; border-radius: 10px;
+  cursor: pointer; z-index: 500;
+  display: flex; align-items: center; gap: 8px;
+  transition: all 0.3s;
+  font-family: 'Instrument Sans', sans-serif;
+}
+.btn-anotacoes:hover { border-color: var(--accent); color: var(--accent); }
+
+.painel-anotacoes {
+  position: fixed; bottom: 90px; left: 32px;
+  width: 320px; background: var(--card);
+  border: 1px solid var(--border); border-radius: 12px;
+  padding: 20px; z-index: 500;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  display: none;
+}
+.painel-anotacoes.aberto { display: block; animation: fadeIn 0.25s ease; }
+.anotacoes-header {
+  font-size: 13px; font-weight: 600; color: var(--white);
+  margin-bottom: 12px; display: flex; justify-content: space-between;
+}
+.anotacoes-fechar { cursor: pointer; color: var(--muted); font-size: 18px; line-height: 1; }
+.anotacoes-textarea {
+  width: 100%; height: 140px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text); font-family: 'Instrument Sans', sans-serif;
+  font-size: 13px; line-height: 1.6;
+  padding: 12px 14px; resize: none; outline: none;
+}
+.anotacoes-textarea:focus { border-color: var(--accent); }
+.anotacoes-info {
+  font-size: 11px; color: var(--muted); margin-top: 8px; text-align: right;
+}
+
+/* ── MENU MOBILE ── */
+.menu-mobile { display: none; }
+
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .menu-mobile { display: flex; color: var(--text); cursor: pointer; font-size: 22px; }
+  section { padding: 80px 20px 60px; }
+  #capa { padding: 80px 20px 60px; }
+  .capa-titulo { font-size: 42px; }
+  .capa-stats { flex-direction: column; }
+  .canais-grid { grid-template-columns: 1fr; }
+  .canal-card:first-child { border-radius: 12px 12px 0 0; }
+  .canal-card:last-child  { border-radius: 0 0 12px 12px; }
+  .icp-campos { grid-template-columns: 1fr; }
+  .proxima-aula { flex-direction: column; }
+  .proxima-semana { display: none; }
+  .btn-anotacoes { display: none; }
+  .capa-numero { display: none; }
+  footer { flex-direction: column; gap: 12px; padding: 24px 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div id="barra-progresso"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Estruturação Comercial</div>
+  <div class="nav-links">
+    <a class="nav-link ativo" href="#agenda">Agenda</a>
+    <a class="nav-link" href="#canais">Canais</a>
+    <a class="nav-link" href="#icp">Perfil Ideal</a>
+    <a class="nav-link" href="#tarefa">Tarefa</a>
+  </div>
+  <div class="nav-semana">Semana 01 / Abril</div>
+</nav>
+
+<!-- CAPA -->
+<section id="capa" style="max-width:100%; padding-left:80px; padding-right:80px;">
+  <div class="capa-grid"></div>
+  <div class="capa-badge">
+    <span class="badge-dot"></span>
+    Aula 01 de 03 — Abril 2025
+  </div>
+  <h1 class="capa-titulo">
+    <span class="linha1">Princípios</span>
+    <span class="linha2">da Estrutura</span>
+    <span class="linha3">Comercial</span>
+  </h1>
+  <p class="capa-desc">
+    Pare de vender por sorte. Aprenda a construir um processo comercial que funciona sem depender de ninguém.
+  </p>
+  <div class="capa-stats">
+    <div class="stat-item">
+      <span class="stat-valor">1h</span>
+      <span class="stat-label">Duração</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-valor">4</span>
+      <span class="stat-label">Blocos</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-valor">3</span>
+      <span class="stat-label">Tarefas</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-valor">Misto</span>
+      <span class="stat-label">Público</span>
+    </div>
+  </div>
+  <div class="capa-numero">01</div>
+  <div class="capa-scroll">
+    Role para baixo
+    <div class="scroll-linha"></div>
+  </div>
+</section>
+
+<!-- AGENDA -->
+<section id="agenda">
+  <p class="secao-label revelar">Estrutura da Aula</p>
+  <h2 class="secao-titulo revelar">O que vamos <span>cobrir hoje</span></h2>
+  <div class="linha-divisoria revelar" id="linha1"></div>
+
+  <div class="agenda-lista revelar">
+
+    <div class="agenda-item" onclick="expandirAgenda(this)">
+      <div class="agenda-tempo">00–10 min</div>
+      <div>
+        <div class="agenda-titulo-item">① Abertura e Nivelamento</div>
+        <div class="agenda-subtitulo">Por que estruturar? O que muda quando você para de "só vender".</div>
+        <div class="agenda-detalhe">
+          <p>Começamos com uma pergunta direta: se um vendedor sair hoje, o processo continua funcionando? Essa resposta define em qual estágio sua empresa está. A diferença entre <strong style="color:var(--accent)">vender</strong> e ter uma <strong style="color:var(--accent)">operação comercial</strong> é o que sustenta o crescimento.</p>
+        </div>
+      </div>
+      <span class="agenda-icon">+</span>
+    </div>
+
+    <div class="agenda-item" onclick="expandirAgenda(this)">
+      <div class="agenda-tempo">10–35 min</div>
+      <div>
+        <div class="agenda-titulo-item">② Canais de Aquisição</div>
+        <div class="agenda-subtitulo">O que são, como escolher e como validar. Negócios entre empresas vs. direto ao consumidor.</div>
+        <div class="agenda-detalhe">
+          <p>Canal de aquisição é qualquer meio pelo qual um potencial cliente descobre e entra em contato com a sua empresa. Estudaremos os três grandes grupos — Chegada Espontânea, Prospecção Ativa e Parcerias — e como cada um se encaixa dependendo do modelo de negócio e estágio da empresa.</p>
+        </div>
+      </div>
+      <span class="agenda-icon">+</span>
+    </div>
+
+    <div class="agenda-item" onclick="expandirAgenda(this)">
+      <div class="agenda-tempo">35–50 min</div>
+      <div>
+        <div class="agenda-titulo-item">③ Perfil de Cliente Ideal</div>
+        <div class="agenda-subtitulo">Quem você quer atender? Por que isso vem antes de tudo.</div>
+        <div class="agenda-detalhe">
+          <p>Antes de escolher um canal, você precisa saber para quem está falando. O Perfil de Cliente Ideal (chamado de ICP no mercado) define o tipo de cliente que mais se beneficia da sua solução — e que mais gera valor para o seu negócio. Canal certo com cliente errado é desperdício.</p>
+        </div>
+      </div>
+      <span class="agenda-icon">+</span>
+    </div>
+
+    <div class="agenda-item" onclick="expandirAgenda(this)">
+      <div class="agenda-tempo">50–60 min</div>
+      <div>
+        <div class="agenda-titulo-item">④ Fechamento + Tarefa</div>
+        <div class="agenda-subtitulo">Resumo, reflexões e o que você vai fazer até a próxima semana.</div>
+        <div class="agenda-detalhe">
+          <p>Consolidamos os aprendizados e cada participante sai com três tarefas práticas para a próxima semana. O objetivo é sair com hipóteses documentadas — não com respostas perfeitas, mas com reflexões concretas para evoluir na Aula 2.</p>
+        </div>
+      </div>
+      <span class="agenda-icon">+</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- CANAIS -->
+<section id="canais">
+  <p class="secao-label revelar">Bloco 02</p>
+  <h2 class="secao-titulo revelar">Canais de <span>Aquisição</span></h2>
+  <div class="linha-divisoria revelar" id="linha2"></div>
+
+  <p class="canais-intro revelar">
+    Canal de aquisição é qualquer meio pelo qual um potencial cliente descobre e entra em contato com a sua empresa. Escolher o canal certo é o primeiro passo para construir um processo comercial eficiente.
+  </p>
+
+  <div class="canais-grid revelar">
+
+    <div class="canal-card inbound">
+      <div class="canal-tag">Chegada Espontânea</div>
+      <div class="canal-nome">Inbound</div>
+      <div class="canal-slogan">O cliente chega até você.</div>
+      <ul class="canal-lista">
+        <li>Conteúdo orgânico e posicionamento</li>
+        <li>Redes sociais e autoridade de marca</li>
+        <li>Indicações e boca a boca</li>
+        <li>Custo por cliente cai com o tempo</li>
+      </ul>
+      <div class="canal-indicador"></div>
+    </div>
+
+    <div class="canal-card outbound">
+      <div class="canal-tag">Prospecção Ativa</div>
+      <div class="canal-nome">Outbound</div>
+      <div class="canal-slogan">Você vai até o cliente.</div>
+      <ul class="canal-lista">
+        <li>Ligações e e-mails de abordagem fria</li>
+        <li>Redes profissionais e venda social</li>
+        <li>Eventos e networking presencial</li>
+        <li>Resultados mais previsíveis e rápidos</li>
+      </ul>
+      <div class="canal-indicador"></div>
+    </div>
+
+    <div class="canal-card parceria">
+      <div class="canal-tag">Terceiros Indicam</div>
+      <div class="canal-nome">Parcerias</div>
+      <div class="canal-slogan">Alguém te apresenta ao cliente.</div>
+      <ul class="canal-lista">
+        <li>Programas de indicação e afiliados</li>
+        <li>Colaborações de marketing conjunto</li>
+        <li>Canais de revenda ou distribuição</li>
+        <li>Custo baixo, mas dependência externa</li>
+      </ul>
+      <div class="canal-indicador"></div>
+    </div>
+
+  </div>
+
+  <p class="tabela-titulo revelar">Empresa para empresa vs. direto ao consumidor</p>
+  <div class="tabela-wrapper revelar">
+    <table class="tabela-comparativa">
+      <thead>
+        <tr>
+          <th>Critério</th>
+          <th class="b2b-col">Empresa para Empresa</th>
+          <th class="b2c-col">Direto ao Consumidor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ciclo de venda</td>
+          <td>Longo — semanas ou meses</td>
+          <td>Curto — horas ou dias</td>
+        </tr>
+        <tr>
+          <td>Canais mais eficazes</td>
+          <td>Redes profissionais, Outbound, Eventos</td>
+          <td>Redes sociais, Anúncios, Inbound</td>
+        </tr>
+        <tr>
+          <td>Quem decide</td>
+          <td>Racional, múltiplos aprovadores</td>
+          <td>Emocional, decisão individual</td>
+        </tr>
+        <tr>
+          <td>Volume de contatos</td>
+          <td>Menor, mais qualificado</td>
+          <td>Alto volume, menor valor por cliente</td>
+        </tr>
+        <tr>
+          <td>Relacionamento</td>
+          <td>Longo prazo, baseado em confiança</td>
+          <td>Transacional, foco em experiência</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ICP -->
+<section id="icp">
+  <p class="secao-label revelar">Bloco 03</p>
+  <h2 class="secao-titulo revelar">Perfil de <span>Cliente Ideal</span></h2>
+  <div class="linha-divisoria revelar" id="linha3"></div>
+
+  <p class="icp-intro revelar">
+    Antes de escolher onde prospectar, você precisa saber <strong style="color:var(--white)">para quem</strong> você está prospectando. O Perfil de Cliente Ideal define o tipo de cliente que mais se beneficia da sua solução.
+  </p>
+
+  <div class="icp-tabs revelar">
+    <button class="icp-tab b2b ativo" onclick="trocarAba('b2b')">Empresa para Empresa</button>
+    <button class="icp-tab b2c" onclick="trocarAba('b2c')">Direto ao Consumidor</button>
+  </div>
+
+  <!-- B2B -->
+  <div class="icp-painel ativo" id="painel-b2b">
+    <div class="icp-campos">
+      <div class="icp-campo">
+        <div class="campo-label">Setor / Segmento</div>
+        <div class="campo-exemplo">Ex: SaaS, Indústria, Educação, Saúde</div>
+        <textarea class="campo-input" rows="2" placeholder="Escreva o setor do seu cliente ideal..."></textarea>
+      </div>
+      <div class="icp-campo">
+        <div class="campo-label">Porte da Empresa</div>
+        <div class="campo-exemplo">Ex: 10–200 funcionários, faturamento R$2M–20M</div>
+        <textarea class="campo-input" rows="2" placeholder="Descreva o tamanho ideal..."></textarea>
+      </div>
+      <div class="icp-campo">
+        <div class="campo-label">Cargo do Decisor</div>
+        <div class="campo-exemplo">Ex: CEO, Diretor Comercial, Gerente de RH</div>
+        <textarea class="campo-input" rows="2" placeholder="Quem aprova a compra?"></textarea>
+      </div>
+      <div class="icp-campo">
+        <div class="campo-label">Principais Dores</div>
+        <div class="campo-exemplo">Ex: alta rotatividade, baixa conversão de leads</div>
+        <textarea class="campo-input" rows="2" placeholder="Que problema você resolve?"></textarea>
+      </div>
+      <div class="icp-campo">
+        <div class="campo-label">Maturidade Digital</div>
+        <div class="campo-exemplo">Ex: Usa CRM? Tem time de marketing estruturado?</div>
+        <textarea class="campo-input" rows="2" placeholder="Nível de estrutura da empresa..."></textarea>
+      </div>
+      <div class="icp-campo">
+        <div class="campo-label">Canal de Acesso</div>
+        <div class="campo-exemplo">Ex: LinkedIn, eventos, indicação de parceiros</div>
+        <textarea class="campo-input" rows="2" placeholder="Como você chega até esse cliente?"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- B2C -->
+  <div class="icp-painel" id="painel-b2c">
+    <div class="icp-campos">
+      <div class="icp-campo b2c">
+        <div class="campo-label">Faixa Etária</div>
+        <div class="campo-exemplo">Ex: 28–45 anos</div>
+        <textarea class="campo-input" rows="2" placeholder="Idade do seu cliente típico..."></textarea>
+      </div>
+      <div class="icp-campo b2c">
+        <div class="campo-label">Renda e Poder de Compra</div>
+        <div class="campo-exemplo">Ex: Classes B e C, renda familiar R$5k–15k</div>
+        <textarea class="campo-input" rows="2" placeholder="Perfil econômico do cliente..."></textarea>
+      </div>
+      <div class="icp-campo b2c">
+        <div class="campo-label">Comportamento de Compra</div>
+        <div class="campo-exemplo">Ex: pesquisa muito antes de decidir, compra por impulso</div>
+        <textarea class="campo-input" rows="2" placeholder="Como esse cliente decide?"></textarea>
+      </div>
+      <div class="icp-campo b2c">
+        <div class="campo-label">Canal Preferido</div>
+        <div class="campo-exemplo">Ex: Instagram, WhatsApp, Google, loja física</div>
+        <textarea class="campo-input" rows="2" placeholder="Onde esse cliente está?"></textarea>
+      </div>
+      <div class="icp-campo b2c">
+        <div class="campo-label">Motivação Principal</div>
+        <div class="campo-exemplo">Ex: status, praticidade, economia, segurança</div>
+        <textarea class="campo-input" rows="2" placeholder="O que move esse cliente?"></textarea>
+      </div>
+      <div class="icp-campo b2c">
+        <div class="campo-label">Objeções Comuns</div>
+        <div class="campo-exemplo">Ex: "tá caro", "preciso pensar", "não conheço a marca"</div>
+        <textarea class="campo-input" rows="2" placeholder="O que impede a compra?"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="icp-alerta revelar">
+    <div class="alerta-icon">⚠️</div>
+    <div class="alerta-texto">
+      <strong>Atenção — Canal certo, cliente errado ainda é desperdício</strong>
+      <p>Definir o perfil ideal antes da abordagem evita desperdiçar tempo, energia e dinheiro prospectando pessoas que nunca vão comprar — ou que compram, mas viram um problema depois.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TAREFA -->
+<section id="tarefa">
+  <p class="secao-label revelar">Bloco 04</p>
+  <h2 class="secao-titulo revelar">Tarefas para a <span>Próxima Semana</span></h2>
+  <div class="linha-divisoria revelar" id="linha4"></div>
+
+  <p class="tarefa-intro revelar">
+    Coloque em prática o que discutimos hoje. Clique em cada tarefa ao concluir para marcar seu progresso antes da Semana 2.
+  </p>
+
+  <div class="progresso-tarefas revelar">
+    <span class="progresso-label">Progresso das tarefas</span>
+    <div class="progresso-barra">
+      <div class="progresso-fill" id="progressoFill"></div>
+    </div>
+    <span class="progresso-pct" id="progressoPct">0%</span>
+  </div>
+
+  <div class="tarefas-lista revelar">
+
+    <div class="tarefa-item t1" onclick="marcarTarefa(this, 1)">
+      <div class="tarefa-num">01</div>
+      <div class="tarefa-corpo">
+        <div class="tarefa-nome">Mapeie seus canais atuais</div>
+        <div class="tarefa-desc">Liste todos os canais pelos quais sua empresa recebe clientes hoje — mesmo que seja "indicação de amigo". Quantifique, se possível: quantos clientes vieram de cada canal nos últimos 3 meses?</div>
+      </div>
+      <div class="tarefa-check" id="check1">✓</div>
+    </div>
+
+    <div class="tarefa-item t2" onclick="marcarTarefa(this, 2)">
+      <div class="tarefa-num">02</div>
+      <div class="tarefa-corpo">
+        <div class="tarefa-nome">Escreva seu Perfil de Cliente Ideal hipótese</div>
+        <div class="tarefa-desc">Mesmo sem dados completos, escreva uma primeira versão usando os campos discutidos na aula. Hipótese documentada é melhor que certeza na cabeça.</div>
+      </div>
+      <div class="tarefa-check" id="check2">✓</div>
+    </div>
+
+    <div class="tarefa-item t3" onclick="marcarTarefa(this, 3)">
+      <div class="tarefa-num">03</div>
+      <div class="tarefa-corpo">
+        <div class="tarefa-nome">Identifique o canal prioritário</div>
+        <div class="tarefa-desc">Com base no perfil ideal que você definiu, qual canal faz mais sentido explorar com profundidade? Por quê? Traga essa reflexão argumentada para a próxima aula.</div>
+      </div>
+      <div class="tarefa-check" id="check3">✓</div>
+    </div>
+
+  </div>
+
+  <div class="proxima-aula revelar">
+    <div>
+      <div class="proxima-badge">Próxima Semana</div>
+      <div class="proxima-titulo">Processo de Vendas e Funil Comercial</div>
+      <div class="proxima-desc">Na Semana 2 vamos construir o funil comercial da sua empresa: etapas, critérios de avanço, cadência de acompanhamento e gestão do pipeline de oportunidades.</div>
+    </div>
+    <div class="proxima-semana">02</div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Estruturação Comercial</div>
+  <div>Aula 1 de 3 — Semana 1 de Abril</div>
+  <div id="relogio"></div>
+</footer>
+
+<!-- Bloco de Anotações -->
+<button class="btn-anotacoes" onclick="toggleAnotacoes()">
+  ✏️ Anotações
+</button>
+<div class="painel-anotacoes" id="painelAnotacoes">
+  <div class="anotacoes-header">
+    <span>Minhas Anotações</span>
+    <span class="anotacoes-fechar" onclick="toggleAnotacoes()">×</span>
+  </div>
+  <textarea class="anotacoes-textarea" id="anotacoesTexto"
+    placeholder="Escreva aqui suas anotações da aula..." oninput="salvarAnotacoes()"></textarea>
+  <div class="anotacoes-info" id="anotacoesInfo">Salvamento automático ativo</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CURSOR ──
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top  = my + 'px';
+});
+function animateRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+document.querySelectorAll('a, button, .canal-card, .tarefa-item, .agenda-item, .icp-campo').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width = '20px'; cursor.style.height = '20px';
+    ring.style.width   = '56px'; ring.style.height   = '56px';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width = '12px'; cursor.style.height = '12px';
+    ring.style.width   = '36px'; ring.style.height   = '36px';
+  });
+});
+
+// ── BARRA DE PROGRESSO ──
+window.addEventListener('scroll', () => {
+  const total = document.body.scrollHeight - window.innerHeight;
+  const pct   = (window.scrollY / total) * 100;
+  document.getElementById('barra-progresso').style.width = pct + '%';
+  atualizarNavAtivo();
+});
+
+// ── NAV ATIVO ──
+function atualizarNavAtivo() {
+  const secs = ['agenda','canais','icp','tarefa'];
+  let atual = '';
+  secs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 120) atual = id;
+  });
+  document.querySelectorAll('.nav-link').forEach(l => {
+    l.classList.toggle('ativo', l.getAttribute('href') === '#' + atual);
+  });
+}
+
+// ── SCROLL REVEAL ──
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      e.target.style.transitionDelay = (i * 0.08) + 's';
+      e.target.classList.add('visivel');
+      // linha animada
+      const id = e.target.id;
+      if (id && id.startsWith('linha')) {
+        setTimeout(() => e.target.classList.add('animada'), 100);
+      }
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.revelar, [id^="linha"]').forEach(el => obs.observe(el));
+
+// ── AGENDA EXPANSÍVEL ──
+function expandirAgenda(item) {
+  const abertos = document.querySelectorAll('.agenda-item.expandido');
+  abertos.forEach(a => { if (a !== item) a.classList.remove('expandido'); });
+  item.classList.toggle('expandido');
+}
+
+// ── ABAS ICP ──
+function trocarAba(aba) {
+  document.querySelectorAll('.icp-tab').forEach(t => t.classList.remove('ativo'));
+  document.querySelectorAll('.icp-painel').forEach(p => p.classList.remove('ativo'));
+  document.querySelector('.icp-tab.' + aba).classList.add('ativo');
+  document.getElementById('painel-' + aba).classList.add('ativo');
+}
+
+// ── TAREFAS ──
+const estadoTarefas = { 1: false, 2: false, 3: false };
+function marcarTarefa(item, num) {
+  estadoTarefas[num] = !estadoTarefas[num];
+  item.classList.toggle('concluida', estadoTarefas[num]);
+  atualizarProgresso();
+  if (estadoTarefas[num]) mostrarToast('Tarefa ' + num + ' concluída! 🎉');
+}
+function atualizarProgresso() {
+  const total     = Object.keys(estadoTarefas).length;
+  const concluidas = Object.values(estadoTarefas).filter(Boolean).length;
+  const pct = Math.round((concluidas / total) * 100);
+  document.getElementById('progressoFill').style.width = pct + '%';
+  document.getElementById('progressoPct').textContent  = pct + '%';
+  if (pct === 100) setTimeout(() => mostrarToast('Todas as tarefas concluídas! Até a Semana 2 🚀'), 300);
+}
+
+// ── TOAST ──
+let toastTimer;
+function mostrarToast(msg) {
+  clearTimeout(toastTimer);
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('visivel');
+  toastTimer = setTimeout(() => t.classList.remove('visivel'), 3000);
+}
+
+// ── ANOTAÇÕES ──
+function toggleAnotacoes() {
+  document.getElementById('painelAnotacoes').classList.toggle('aberto');
+}
+function salvarAnotacoes() {
+  const txt = document.getElementById('anotacoesTexto').value;
+  try { localStorage.setItem('anotacoes_aula1', txt); } catch(e) {}
+  document.getElementById('anotacoesInfo').textContent = 'Salvo às ' + new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+}
+// Carregar anotações salvas
+try {
+  const salvo = localStorage.getItem('anotacoes_aula1');
+  if (salvo) document.getElementById('anotacoesTexto').value = salvo;
+} catch(e) {}
+
+// ── RELÓGIO ──
+function atualizarRelogio() {
+  document.getElementById('relogio').textContent =
+    new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+}
+setInterval(atualizarRelogio, 1000);
+atualizarRelogio();
+
+// ── HOVER CARDS COM PARTÍCULAS ──
+document.querySelectorAll('.canal-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width  - 0.5) * 10;
+    const y = ((e.clientY - rect.top)  / rect.height - 0.5) * 10;
+    card.style.transform = `perspective(600px) rotateY(${x}deg) rotateX(${-y}deg) translateY(-4px)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+  });
+});
+
+// ── ABERTURA AUTOMÁTICA DA AGENDA ──
+setTimeout(() => {
+  const primeiro = document.querySelector('.agenda-item');
+  if (primeiro) primeiro.classList.add('expandido');
+}, 1200);
+</script>
+</body>
+</html>
